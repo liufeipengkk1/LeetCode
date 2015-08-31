@@ -20,5 +20,7 @@ public:
 
 	//leetcode 4:
 	double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2);
+private:
+	double findKthSmallValue_1(vector<int>& nums1, vector<int>& nums2,int k);
 };
 

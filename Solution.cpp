@@ -131,6 +131,8 @@ int Solution::lengthOfLongestSubstring(string s)
 // time complicate : Log(m+n)  --> like binarySearch
 double Solution::findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
 {
+	/*
+	//Method 1:merge the arrays and sort ,the we find the median Number (logN)
 	vector<int> nums(nums1.size() + nums2.size());
 	copy(nums1.begin(),nums1.end(),nums.begin());
 	copy(nums2.begin(), nums2.end(), nums.begin() + nums1.size());
@@ -146,4 +148,71 @@ double Solution::findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
 	{
 		return (nums[(totalLen -1 ) / 2.0] + nums[(totalLen + 1) / 2.0]) /2.0;
 	}
+	*/
+
+
+	//Method 2:find Kth Small number
+	int totalLen = nums1.size() + nums2.size();
+	if (totalLen % 2)
+		return findKthSmallValue_1(nums1, nums2, totalLen/2 + 1);
+	else
+	{
+		int k1 = findKthSmallValue_1(nums1, nums2, (totalLen - 1) / 2 + 1);
+		int k2 = findKthSmallValue_1(nums1, nums2, (totalLen + 1) / 2 + 1);
+		return (k1 + k2) / 2.0;
+	}
+}
+
+// o(n)
+double Solution::findKthSmallValue_1(vector<int>& nums1, vector<int>& nums2,int k)
+{
+	
+	// it's easy to conjecture that k = pa + pb ;
+	//pa : before Kth value,there ara pa numbers
+	//pb : before Kth value ,there are pb numbers
+	int pa = 0;
+	int pb = 0;
+	int kthVal = 0;
+
+	if (k > (nums1.size() + nums2.size()) || k < 0)
+		throw new exception("k --  out of range");
+
+	if (k == 0)
+		return (nums1[0] < nums2[0]) ? nums1[0] : nums2[0];
+
+	//vector<int>::iterator it1 = nums1.begin();
+	//vector<int>::iterator it2 = nums2.begin();
+	while (pa + pb != k)
+	{
+		if ((it1 != nums1.end()) && (it2 != nums2.end()))
+		{
+			if ((*it1) < (*it2))
+			{
+				pa++;
+				kthVal = (*it1);
+				it1++;
+			}
+			else
+			{
+				pb++;
+				kthVal = (*it2);
+				it2++;
+			}
+		}
+		else if (it1 == nums1.end())
+		{
+			pb++;
+			kthVal = (*it2);
+			it2++;
+
+		}
+		else if (it2 == nums2.end())
+		{
+			pa++;
+			kthVal = (*it1);
+			it1++;
+		}
+	}
+
+	return kthVal;
 }
