@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>>
 #include <iostream>
 using namespace std;
 class Solution
@@ -16,5 +17,8 @@ public:
 	// leet code 3:longest substring without repeating characters
 	//this problem actully means finding the charaters thar appears once
 	int lengthOfLongestSubstring(string s);
+
+	//leetcode 4:
+	double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2);
 };
 

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Solution.h"
+#include <algorithm>
 
 Solution::Solution()
 {
@@ -101,15 +102,16 @@ int Solution::searchRotateArray(int a[], int n, int target)
 //leetcode 3
 int Solution::lengthOfLongestSubstring(string s)
 {
+	if (s.length() == 0)
+		return 0;
 	int length = s.length();
 	int  ar[256];
+	memset(ar, -1, sizeof(ar));
 	
-	memset(ar,-1,sizeof(ar));
-
-	int max = 0, index = 0;
+	int max = 0, index = -1;
 	for (int i = 0; i < length; i++)
 	{
-		if (ar[s[i]] != -1)
+		if (ar[s[i]] >= index)
 		{
 			index = ar[s[i]] + 1;
 		}
@@ -122,4 +124,26 @@ int Solution::lengthOfLongestSubstring(string s)
 	}
 
 	return max + 1;
+}
+
+
+//leetcode 4
+// time complicate : Log(m+n)  --> like binarySearch
+double Solution::findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
+{
+	vector<int> nums(nums1.size() + nums2.size());
+	copy(nums1.begin(),nums1.end(),nums.begin());
+	copy(nums2.begin(), nums2.end(), nums.begin() + nums1.size());
+	sort(nums.begin(), nums.end());
+	
+	int totalLen = nums1.size() + nums2.size();
+
+	if (totalLen % 2)
+	{
+		return nums[(totalLen)/2.0];
+	}
+	else
+	{
+		return (nums[(totalLen -1 ) / 2.0] + nums[(totalLen + 1) / 2.0]) /2.0;
+	}
 }
