@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Solution.h"
 #include <algorithm>
+#include <map>
 
 Solution::Solution()
 {
@@ -98,6 +99,93 @@ int Solution::searchRotateArray(int a[], int n, int target)
 	return 0;
 }
 
+//Leetcode 1:
+vector<int> Solution::twoSum(vector<int>& nums, int target)
+{
+	vector<int> result;
+	int length = nums.size();
+	int * array = new int[length];
+	map<int, int> valueMap;
+
+	for (int i = 0; i < length; i++)
+	{
+		array[i] = nums[i];
+	}
+	for (int i = 0; i < length; i++)
+	{
+		if (!(valueMap.count(array[i])))
+		{
+			valueMap.insert(pair<int, int>(array[i], i));
+		}
+
+		if (valueMap.count(target - array[i]))
+		{
+			int index1 = valueMap[target - array[i]];
+			if (index1 < i)
+			{
+				result.push_back(index1 + 1);
+				result.push_back(i + 1);
+				//cout<<n+1<<", "<<i+1<<endl;  
+				return result;
+			}
+		}
+	}
+
+
+	return result;
+}
+//LeetCode 2:
+ListNode * Solution::addTwoNumbers(ListNode * l1, ListNode *l2)
+{
+	ListNode * result = new ListNode(0);
+	ListNode * head = result;
+	ListNode * tail = NULL;
+	bool flag = false;
+	int digit = 0;
+	int temp = 0;
+	while (l1 != NULL || l2 != NULL)
+	{
+		if (l1 == NULL || l2 == NULL)
+		{
+			temp = (l1 == NULL ? l2->val : l1->val) + digit;
+		}
+		else
+		{
+			temp = l1->val + l2->val + digit;
+		}
+		digit = 0;
+
+		if (temp >= 10)
+		{
+			digit = 1;
+			head->val = temp - 10;
+		}
+		else
+		{
+			head->val = temp;
+		}
+		head->next = new ListNode(0);
+		tail = head;
+		head = head->next;
+		if (l1)
+			l1 = l1->next;
+		if (l2)
+			l2 = l2->next;
+	}
+	
+	if (digit)
+	{
+		head->val = 1;
+		head->next = NULL;
+	}
+	else
+	{
+		tail->next = NULL;
+		delete head;
+		head = NULL;
+	}
+	return result;
+}
 
 //leetcode 3
 int Solution::lengthOfLongestSubstring(string s)
