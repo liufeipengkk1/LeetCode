@@ -128,11 +128,11 @@ int Solution::lengthOfLongestSubstring(string s)
 
 
 //leetcode 4
-// time complicate : Log(m+n)  --> like binarySearch
+// time complixity : Log(m+n)  --> like binarySearch
 double Solution::findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
 {
 	/*
-	//Method 1:merge the arrays and sort ,the we find the median Number (logN)
+	//Method 1:merge the arrays and sort ,the we find the median Number
 	vector<int> nums(nums1.size() + nums2.size());
 	copy(nums1.begin(),nums1.end(),nums.begin());
 	copy(nums2.begin(), nums2.end(), nums.begin() + nums1.size());
@@ -152,7 +152,7 @@ double Solution::findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
 
 
 	//Method 2:find Kth Small number
-	int totalLen = nums1.size() + nums2.size();
+	/*int totalLen = nums1.size() + nums2.size();
 	if (totalLen % 2)
 		return findKthSmallValue_1(nums1, nums2, totalLen/2 + 1);
 	else
@@ -160,7 +160,32 @@ double Solution::findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
 		int k1 = findKthSmallValue_1(nums1, nums2, (totalLen - 1) / 2 + 1);
 		int k2 = findKthSmallValue_1(nums1, nums2, (totalLen + 1) / 2 + 1);
 		return (k1 + k2) / 2.0;
+	}*/
+
+	//Method 3:find Kth Small number O(Log(N))
+	int m = nums1.size();
+	int n = nums2.size();
+	int * a = new int[m];
+	int * b = new int[n];
+	
+	for (int i = 0; i < nums1.size(); i++)
+	{
+		a[i] = nums1[i];
 	}
+	for (int i = 0; i < nums2.size(); i++)
+	{
+		b[i] = nums2[i];
+	}
+
+	if ((m+n) % 2)
+		return findKthSmallValue_2(a,m,b,n ,(m+n) / 2 + 1);
+	else
+	{
+		int k1 = findKthSmallValue_2(a, m, b, n, (m + n + 1) / 2 + 1);
+		int k2 = findKthSmallValue_2(a, m, b, n, (m + n - 1) / 2 + 1);
+		return (k1 + k2) / 2.0;
+	}
+
 }
 
 // o(n)
@@ -180,8 +205,8 @@ double Solution::findKthSmallValue_1(vector<int>& nums1, vector<int>& nums2,int 
 	if (k == 0)
 		return (nums1[0] < nums2[0]) ? nums1[0] : nums2[0];
 
-	//vector<int>::iterator it1 = nums1.begin();
-	//vector<int>::iterator it2 = nums2.begin();
+	vector<int>::iterator it1 = nums1.begin();
+	vector<int>::iterator it2 = nums2.begin();
 	while (pa + pb != k)
 	{
 		if ((it1 != nums1.end()) && (it2 != nums2.end()))
@@ -215,4 +240,27 @@ double Solution::findKthSmallValue_1(vector<int>& nums1, vector<int>& nums2,int 
 	}
 
 	return kthVal;
+}
+
+//O(Log(N))
+double Solution::findKthSmallValue_2(int a[], int m, int b[], int n, int k)
+{
+	if (k > (m + n) || k < 0)
+		throw new exception("K --- Out of Range");
+	if(m > n)
+		return findKthSmallValue_2(b, n, a, m, k);
+	if (m == 0)
+		return b[k - 1];
+	if (k == 1)
+		return min(a[0],b[0]);
+
+	int pa = min(k/2,m),pb = k - pa;
+	if (a[pa - 1] > b[pb - 1])
+		return findKthSmallValue_2(a, m, b + pb, n - pb, k - pb);
+	else if (a[pa - 1] < b[pb - 1])
+		return findKthSmallValue_2(a + pa, m - pa, b, n, k - pa);
+	else if (a[pa - 1] == b[pb - 1])
+	{
+		return a[pa-1];
+	}
 }
